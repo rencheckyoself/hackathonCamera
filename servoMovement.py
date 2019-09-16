@@ -14,6 +14,7 @@ uSecLimits = [950,1850]
 servoChn = ['\x00','\x01']
 
 byteCombo = [0,0]
+bitMask = [127,16256]
 
 b = uSecLimits[0]
 m = (uSecLimits[1] - uSecLimits[0])/inputLimits[1]
@@ -59,31 +60,15 @@ if ser.is_open:
 
                                 print(target[i])
 
-                                target[i] = bin(target[i])
+                                byteCombo[0] = target[i] & bitMask[0]
+                                byteCombo[1] = target[i] & bitMask[1]
+                                byteCombo[1] = byteCombo[1] >> 7
 
-                                print(target[i])
+                                print(byteCombo)
 
-                                byteCombo[0] = target[i][9:]
-                                byteCombo[1] = target[i][2:9]
+                                buffer = ['\x84',servoChn[i],chr(byteCombo[0]), chr(byteCombo[1])]
 
-                                for j in range(len(byteCombo)):
-                                        while len(byteCombo[j]) < 8:
-                                                byteCombo[j] = '0' + byteCombo[j]
-
-                                        byteCombo[j] = '0b' + byteCombo[j]
-                                        print(byteCombo[j])
-
-                                        byteCombo[j] = int(byteCombo[j],2)
-
-                                        print(byteCombo[j])
-
-                                        byteCombo[j] = chr(byteCombo[j])
-
-                                        print(byteCombo[j])
-
-                                #buffer = '\x84' + servoChn[i] + byteCombo[0] + byteCombo[1]
-
-                                # ser.write(buffer)
+                                ser.write(buffer)
                         goodInput = 0
 else:
         print("Serial port not open or not found")
