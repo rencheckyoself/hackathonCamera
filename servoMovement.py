@@ -34,16 +34,16 @@ class Servo:
                 self.Pin = pinNum
                 self.servoChn = chr(pinNum)
 
-        def setPin(self, pinNum):
+        def SetPin(self, pinNum):
                 self.Pin = pinNum
                 self.servoChn = chr(pinNum)
                 print("Pin set to " + str(pinNum))
 
-        def setLimits(self, lowerLim, upperLim):
+        def SetLimits(self, lowerLim, upperLim):
                 self.uSecLimits[0] = lowerLim
                 self.uSecLimits[1] = upperLim
 
-        def move():
+        def Move():
                 return
 
 
