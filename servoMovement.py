@@ -23,6 +23,33 @@ target = [0,0] #[base motor target, head motor target]
 
 ser = serial.Serial('/dev/ttyACM0',9600)
 
+
+class Servo:
+        """A class to interact with the servo board"""
+
+        uSecLimits = [950,1850]
+        bitMask = [127,16256]
+
+        def __init__(self, pinNum):
+                self.Pin = pinNum
+                self.servoChn = chr(pinNum)
+
+        def setPin(self, pinNum):
+                self.Pin = pinNum
+                self.servoChn = chr(pinNum)
+                print("Pin set to " + str(pinNum))
+
+        def setLimits(self, lowerLim, upperLim):
+                self.uSecLimits[0] = lowerLim
+                self.uSecLimits[1] = upperLim
+
+        def move():
+                return
+
+
+base = Servo(0)
+head = Servo(1)
+
 if ser.is_open:
 
         print(ser.name)
