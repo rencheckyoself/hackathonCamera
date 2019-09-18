@@ -9,15 +9,6 @@ goodInput = 0
 userInput = [-1,-1]
 
 inputLimits = [0,100]
-uSecLimits = [950,1850]
-
-servoChn = ['\x00','\x01']
-
-byteCombo = [0,0]
-bitMask = [127,16256]
-
-b = uSecLimits[0]
-m = (uSecLimits[1] - uSecLimits[0])/inputLimits[1]
 
 target = [0,0] #[base motor target, head motor target]
 
@@ -29,6 +20,10 @@ class Servo:
 
         uSecLimits = [950,1850]
         bitMask = [127,16256]
+        _byteCombo = [0,0]
+        _bitMask = [127,16256]
+        _b = uSecLimits[0]
+        _m = (uSecLimits[1] - uSecLimits[0])/inputLimits[1]
 
         def __init__(self, pinNum):
                 self.Pin = pinNum
@@ -43,8 +38,20 @@ class Servo:
                 self.uSecLimits[0] = lowerLim
                 self.uSecLimits[1] = upperLim
 
-        def Move():
-                return
+        def Move(self, entry):
+
+                buffer = []
+                goToPos = 0
+
+                goToPos = (self._m * entry + self._b) * 4
+
+                self._byteCombo[0] = goToPos & self._bitMask[0]
+                self._byteCombo[1] = goToPos & self._bitMask[1]
+                self._byteCombo[1] = self._byteCombo[1] >> 7
+
+                buffer = ['\x84',self.servoChn, chr(self._byteCombo[0]), chr(self._byteCombo[1])]
+
+                return buffer
 
 
 base = Servo(0)
@@ -74,28 +81,16 @@ if ser.is_open:
                                         goodInput = 1
 
                         except (ValueError):
-
-                                print("except")
                                 print("Input values must be " + str(inputLimits[0]) +" to " + str(inputLimits[1]) + ", or -1 to exit")
 
                 if target[1] == -1 or target[0] == -1:
                         askUser = 0
                         print("Program Done")
                 else:
-                        for i in range(len(target)):
-                                target[i] = (m * target[i] + b) * 4 #calc 4 * quarter micro second position
 
-                                print(target[i])
+                        ser.write(base.Move(target[0]))
+                        ser.write(head.Move(target[1]))
 
-                                byteCombo[0] = target[i] & bitMask[0]
-                                byteCombo[1] = target[i] & bitMask[1]
-                                byteCombo[1] = byteCombo[1] >> 7
-
-                                print(byteCombo)
-
-                                buffer = ['\x84',servoChn[i],chr(byteCombo[0]), chr(byteCombo[1])]
-
-                                ser.write(buffer)
                         goodInput = 0
 else:
         print("Serial port not open or not found")
