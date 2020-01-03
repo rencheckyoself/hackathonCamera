@@ -3,6 +3,8 @@ This code with track an orange ping pong ball using a web cam mounted on a pan a
 
 The servos used in the video were natively limited to 0 - 90 degrees, therefore the code does not support travel outside this range.
 
+Demo Video [here](https://youtu.be/QH3eQdzKEKA)
+
 # Parts list
 * 1x DC Barrel Jack
 * 1x [Pan Tilt Kit](https://www.sparkfun.com/products/10335)
