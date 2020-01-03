@@ -24,18 +24,16 @@ os.system("v4l2-ctl -d /dev/video0 -c exposure_auto=1")
 os.system("v4l2-ctl -d /dev/video0 -c exposure_absolute=100")
 os.system("v4l2-ctl -d /dev/video0 -c white_balance_temperature_auto=0")
 os.system("v4l2-ctl -d /dev/video0 -c white_balance_temperature=2800")
-#fourcc = cv2.VideoWriter_fourcc(*'XVID')
-#out = cv2.VideoWriter('output.avi', fourcc, 20.0, (screenX,screenY))
 
-os.system("")
-
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.avi', fourcc, 20.0, (screenX,screenY))
 
 def main():
         maxCnt = None
         defaultX = int(screenX/2)
         defaultY = int(screenY/2)
 
-        stepSize = 25
+        stepSize = 100
 
         prevArea = 0
 
@@ -86,6 +84,8 @@ def main():
                 cv2.imshow('Original',frame)
                 #cv2.imshow('mask',maskColor)
 
+                out.write(frame)
+
                 toc = sys.time()
                 loopTime = toc - tic
                 fpsCamera = cap.get(cv2.CAP_PROP_FPS)
@@ -95,7 +95,7 @@ def main():
                         break
 
                 moveBase = int(((-defaultX + setX)/(.5*screenX))**3 * stepSize)
-                moveHead = int(((-defaultY + setY)/(.5*screenY)) * stepSize)
+                moveHead = int(((-defaultY + setY)/(.5*screenY))**3 * stepSize)
 
                 ser.write(base.Move(moveBase))
                 ser.write(head.Move(moveHead))
@@ -104,4 +104,5 @@ ser.write(base.Move(0))
 ser.write(head.Move(0))
 main()
 cap.release()
+out.release()
 cv2.destroyAllWindows()

@@ -1,0 +1,4 @@
+*.pyc
+cameraTracking.py
+testMovement.py
+servoMovement.py
