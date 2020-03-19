@@ -1,5 +1,5 @@
 # Description
-This code with track an orange ping pong ball using a web cam mounted on a pan and tilt servo set up. You may need to tweak some of the parameters depending on your camera.
+This code will track an orange ping pong ball using a web cam mounted on a pan and tilt servo set up. You may need to tweak some of the parameters depending on your camera and servos.
 
 The servos used in the video were natively limited to 0 - 90 degrees, therefore the code does not support travel outside this range.
 
